@@ -531,6 +531,13 @@ class SchemaObjectBuilder
     return 'paths' if has_link?
     return 'reference' if schema.reference
     return 'any_of' unless schema.any_of.empty?
+    if @schema.type.sort == ["integer", "string"]
+      return "string"
+    elsif @schema.type.sort == ["array", "string"]
+      return "array"
+    elsif @schema.type.sort == ["integer", "null", "string"]
+      return "string"
+    end
     raise "OpenAPI3 unsupport multi type #{@schema.inspect}" if @schema.type.reject{|t| t == "null"}.size == 2 
     @schema.type.first
   end
